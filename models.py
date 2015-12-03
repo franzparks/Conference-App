@@ -108,3 +108,47 @@ class ConferenceQueryForms(messages.Message):
     """ConferenceQueryForms -- multiple ConferenceQueryForm inbound form message"""
     filters = messages.MessageField(ConferenceQueryForm, 1, repeated=True)
 
+#----------------------------------------------------------------
+class Session(ndb.Model):
+    """Session - conference session object"""
+    name          = ndb.StringProperty(required=True)
+    highlights    = ndb.StringProperty(repeated=True)
+    speaker       = ndb.StringProperty()
+    duration      = ndb.IntegerProperty()
+    typeOfSession = ndb.StringProperty()
+    date          = ndb.DateProperty()
+    startTime     = ndb.TimeProperty()
+
+class SessionForm(messages.Message):
+    """SessionForm -- Session outbound form message"""
+    name          = messages.StringField(1)
+    highlights    = messages.StringField(2, repeated=True)
+    speaker       = messages.StringField(3)
+    duration      = messages.IntegerField(4)
+    typeOfSession = messages.StringField(5)
+    date          = messages.StringField(6)
+    startTime     = messages.StringField(7)
+    websafeKey    = messages.StringField(8)
+
+class SessionForms(messages.Message):
+    """SessionForms -- multiple Session outbound form message"""
+    items = messages.MessageField(SessionForm, 1, repeated=True)
+
+class WishlistSession(ndb.Model):
+    """WishlistSession - conference session wishlist object"""
+    sessionConferenceKey = ndb.StringProperty(required=True)
+    sessionKey = ndb.StringProperty(required=True)
+    userId = ndb.StringProperty()
+    addDate = ndb.DateTimeProperty(auto_now_add=True)
+
+class WishlistSessionForm(messages.Message):
+    """WishlistSessionForm -- WishlistSession outbound form message"""
+    sessionConferenceKey = messages.StringField(1)
+    sessionKey = messages.StringField(2)
+    userId = messages.StringField(3)
+    addDate = messages.StringField(4)
+    websafeKey = messages.StringField(5)
+
+class WishlistSessionForms(messages.Message):
+    """WishlistSessionForms -- multiple WishlistSession outbound form message"""
+    items = messages.MessageField(WishlistSessionForm, 1, repeated=True)
