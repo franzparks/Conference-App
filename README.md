@@ -1,25 +1,25 @@
 App Engine application for the Udacity Nanodegree: Full Stack Developer (Project 4)
 
 ## Products
-- [App Engine][1]
+- App Engine
 
 ## Language
-- [Python][2]
+- Python
 
 ## APIs
-- [Google Cloud Endpoints][3]
-- [API Explorer][7]
+- Google Cloud Endpoints
+- API Explorer
 
 ## Setup Instructions
 1. Update the value of `application` in `app.yaml` to the app ID you
    have registered in the App Engine admin console.
 1. Update the values in the `settings.py` to
    reflect the respective client IDs you have registered in the
-   [Developer Console][4].
+   Developer Console.
 1. Update the value of CLIENT_ID in `static/js/app.js` to the Web client ID
 
-1. Run the app with the devserver using `dev_appserver.py DIR`, and ensure it's running by visiting your local server's address (by default [localhost:8080][5].)
-1. (Optional) Generate your client library(ies) with [the endpoints tool][6].
+1. Run the app with the devserver using `dev_appserver.py DIR`, and ensure it's running by visiting your local server's address (by default localhost:8080.)
+1. (Optional) Generate your client library(ies) with the endpoints tool.
 1. Deploy your application.
 
 ## Tasks
@@ -76,7 +76,7 @@ need create a separate speaker entity.
 Think about other types of queries that would be useful for this application.
 Describe the purpose of 2 new queries and write the code that would perform them.
 
-Note: The following two endpoints can be assessed from the [API Explorer][7]
+Note: The following two endpoints can be assessed from the API Explorer
 
 #### query 1
 
@@ -122,17 +122,11 @@ Get all sessions for all conferences which are within a given location (city).
 > How would you handle a query for all non-workshop sessions before 7 pm?
 
 #### What is the problem for implementing this query?
-
-An inequality filter can be applied to at most one property. The problem here
-would require an inequality filter on two:
-
-- typeOfSession not equal to workshop
-- startTime less than 7 pm
+An inequality filter can be applied to at most one property. This problem requires an inequality filter on two properties.
 
 #### What ways to solve it did you think of?
 
 #### Solution:
-An inequality filter can be applied to at most one property. This problem requires an inequality filter on two properties.
 
 Assuming that we have a list of session types ( lets call it SessionTypes), we can combine the two inequalities to come up with a solution by first filtering out the type which is workshop('WORKSHOP' in this case) (this solution excludes sessions which begin before 7PM and run past it. That would require an extra condition):
 
