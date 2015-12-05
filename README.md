@@ -53,11 +53,14 @@ In the SessionForm pass in:
 
 ### Explain your design choices
 
-The Sessions implementation is based heavy on the existing Conference
-implementation due to their similar functionality and related purpose.
+Note: All endpoints can be assessed from the API Explorer
 
-For the sake of simplicity speaker is defined as a StringProperty to avoid the
-need create a separate speaker entity.
+For sessions, name and speaker fields are of type stringProperty, date is a dateProperty, start time is a timeProperty and the  duration field is in minutes as an Integer property. The duration represents a maximun range for which a user can search for sessions. All sessions less than or equal to the given duration will be returned.
+
+Sessions have been  implemented in a similar way to conferences. A session form is used to copy data and return form objects respectively. A user can save SessionsKeys in their profile as a wish-list for sessions they wish to attend.  There is validation to make sure no repeated values are saved in wish-list and that only urlSafe strings can be saved to the profile.
+
+At the moment the featured speaker is being stored as a string in memcache once a particular speaker has more than one session for simplicity.
+
 
 ## Task 2: Add Sessions to User Wishlist
 
@@ -69,6 +72,11 @@ need create a separate speaker entity.
 - `getSessionsInWishlist()`
    query for all the sessions in a conference that the user is interested in
 
+- `deleteSessionInWishlist(SessionKey)`
+   removes the session from the user’s list of sessions they are interested in attending
+
+
+
 ## Task 3: Work on indexes and queries
 
 ### Part 1: Come up with 2 additional queries
@@ -76,24 +84,21 @@ need create a separate speaker entity.
 Think about other types of queries that would be useful for this application.
 Describe the purpose of 2 new queries and write the code that would perform them.
 
-Note: The following two endpoints can be assessed from the API Explorer
 
 #### query 1
 
-Get sessions by their duration.
+Get sessions by their duration in minutes. All sessions less than or equal to the given duration will be returned
 
 ```py
-@endpoints.method(SESSION_GET_REQUEST_BY_DURATION, SessionForms,
+@endpoints.method(SessionsByDurationForm, SessionForms,
             http_method='GET',
             name='getSessionsByDuration')
     def getSessionsByDuration(self, request):
         """Return sessions by their duration."""
-        
-        #converting string param (duration) to int
-        sessions = Session.query(Session.duration == int(request.duration))
+        # get sessions less than or equal to the given time in minutes
+        sessions = Session.query(Session.duration <= int(request.duration))
 
         return SessionForms(items=[self._copySessionToForm(session) for session in sessions])
-
 
 ```
 
