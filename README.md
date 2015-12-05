@@ -55,11 +55,13 @@ In the SessionForm pass in:
 
 Note: All endpoints can be assessed from the API Explorer
 
-For sessions, name and speaker fields are of type stringProperty, date is a dateProperty, start time is a timeProperty and the  duration field is in minutes as an Integer property. The duration represents a maximun range for which a user can search for sessions. All sessions less than or equal to the given duration will be returned.
+For sessions class, name and speaker fields are of type stringProperty, date is a dateProperty, start time is a timeProperty and the  duration field is in minutes as an Integer property. The duration represents a maximun range for which a user can search for sessions. All sessions less than or equal to the given duration will be returned.
 
-Sessions have been  implemented in a similar way to conferences. A session form is used to copy data and return form objects respectively. A user can save SessionsKeys in their profile as a wish-list for sessions they wish to attend.  There is validation to make sure no repeated values are saved in wish-list and that only urlSafe strings can be saved to the profile.
+Speaker is stored as a string property to allow for simple queries although at the moment this limits the amount of information which can be stored about a speaker. A stand alone entity can be created to allow for a more dynamic use of the object with additional information which can be used for more queries but for now to simplify the design, only the name is required hence the decision to store it as string. 
 
-At the moment the featured speaker is being stored as a string in memcache once a particular speaker has more than one session for simplicity.
+Sessions have been  implemented in a similar way to conferences and they are a child object of conference. A session form is used to copy data and return form objects respectively. A user can save SessionsKeys to their profile as a wish-list for sessions they wish to attend.  There is validation to make sure no repeated values are saved in wish-list and that only urlSafe strings can be saved to the profile.
+
+The featured speaker is being stored as a string in memcache once a particular speaker has more than one session for simplicity.
 
 
 ## Task 2: Add Sessions to User Wishlist
