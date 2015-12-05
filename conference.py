@@ -56,7 +56,7 @@ MEMCACHE_ANNOUNCEMENTS_KEY = "RECENT_ANNOUNCEMENTS"
 ANNOUNCEMENT_TPL = ('Last chance to attend! The following conferences '
                     'are nearly sold out: %s')
 MEMCACHE_FEATURED_SPEAKER_KEY = "FEATURED_SPEAKER"
-FEATURED_SPEAKER_TPL = ("This session's featured speaker is: %s!")
+FEATURED_SPEAKER_TPL = ("The featured speaker is: %s")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -115,9 +115,6 @@ SESSION_GET_REQUEST_BY_LOCATION = endpoints.ResourceContainer(
     message_types.VoidMessage,
     city=messages.StringField(1),
 )
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 @endpoints.api(name='conference', version='v1', audiences=[ANDROID_AUDIENCE],
@@ -711,28 +708,28 @@ class ConferenceApi(remote.Service):
 
 # - - - Featured Speaker - - - - - - - - - - - - - - - - - - - -
     @staticmethod
-    def _cacheSpeaker(speaker):
-        """Replace the default featured speaker with anyone that is determined
-        to be the speaker at more than one session.
-        """
-        # fetch all sessions that have speaker.
+    def _cacheFeaturedSpeaker(speaker):
+        """Replace the default featured speaker with speaker who has more than one session. """
+
+        # fetch all sessions that have this speaker.
         sessions = Session.query(Session.speaker == speaker).fetch()
         # If more than one session is returned:
         if len(sessions) > 1:
             # Update string to have new speaker.
-            featuredSpeaker = (FEATURED_SPEAKER_TPL % speaker) + ' ' + 'Sessions:'
+            
+            featuredSpeaker = (FEATURED_SPEAKER_TPL % speaker) + ' ' + ' : Sessions:'
             # Set Memcache with update.
             for session in sessions:
-                featuredSpeaker += ' ' + session.name
+                featuredSpeaker += ' ' + session.name + ', '
             memcache.set(MEMCACHE_FEATURED_SPEAKER_KEY, featuredSpeaker)
         
         else:
-            featSpeak = (memcache.get(MEMCACHE_FEATURED_SPEAKER_KEY) or "")
+            featuredSpeaker = (memcache.get(MEMCACHE_FEATURED_SPEAKER_KEY) or "")
         # Return featured speaker.
-        return featSpeak
+        return featuredSpeaker
 
     @endpoints.method(message_types.VoidMessage, StringMessage,
-            path='conference/featSpeaker/get',
+            path='conference/featuredSpeaker/get',
             http_method='GET', name='getFeaturedSpeaker')
     def getFeaturedSpeaker(self, request):
         """Return the Featured Speaker from memcache."""
