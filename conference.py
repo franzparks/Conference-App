@@ -617,13 +617,15 @@ class ConferenceApi(remote.Service):
         # Validate that a name is present
         if not request.name:
             raise endpoints.BadRequestException("Session 'name' field required")
+
         #Validate that a websafeConferenceKey is present
         if not request.websafeConferenceKey:
             raise endpoints.BadRequestException("Session 'websafeConferenceKey' field required")
         
-        conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
-        # Validate that conference exists
-        if not conf:
+        try:
+            # Validate that conference exists
+            conf = ndb.Key(urlsafe=request.websafeConferenceKey).get()
+        except Exception, e:
             raise endpoints.NotFoundException(
                 'No conference found with key: %s' % request.websafeConferenceKey)
         
@@ -709,7 +711,7 @@ class ConferenceApi(remote.Service):
 # - - - Featured Speaker - - - - - - - - - - - - - - - - - - - -
     @staticmethod
     def _cacheFeaturedSpeaker(speaker):
-        """Replace the default featured speaker with speaker who has more than one session. """
+        """ Replace the default featured speaker with speaker who has more than one session. """
 
         # fetch all sessions that have this speaker.
         sessions = Session.query(Session.speaker == speaker).fetch()
