@@ -125,6 +125,7 @@ class ConferenceApi(remote.Service):
 
 # - - - Conference objects - - - - - - - - - - - - - - - - -
 
+    #copy conferences to form 
     def _copyConferenceToForm(self, conf, displayName):
         """Copy relevant fields from Conference to ConferenceForm."""
         cf = ConferenceForm()
@@ -142,7 +143,7 @@ class ConferenceApi(remote.Service):
         cf.check_initialized()
         return cf
 
-
+   #Create a conference object 
     def _createConferenceObject(self, request):
         """Create or update Conference object, returning ConferenceForm/request."""
         # preload necessary data items
@@ -194,7 +195,7 @@ class ConferenceApi(remote.Service):
         )
         return request
 
-
+    # Update conference object
     @ndb.transactional()
     def _updateConferenceObject(self, request):
         user = endpoints.get_current_user()
@@ -235,6 +236,8 @@ class ConferenceApi(remote.Service):
         return self._copyConferenceToForm(conf, getattr(prof, 'displayName'))
 
 
+
+    # Create conference end point
     @endpoints.method(ConferenceForm, ConferenceForm, path='conference',
             http_method='POST', name='createConference')
     def createConference(self, request):
@@ -242,6 +245,7 @@ class ConferenceApi(remote.Service):
         return self._createConferenceObject(request)
 
 
+    # Update conference end point
     @endpoints.method(CONF_POST_REQUEST, ConferenceForm,
             path='conference/{websafeConferenceKey}',
             http_method='PUT', name='updateConference')
@@ -249,7 +253,7 @@ class ConferenceApi(remote.Service):
         """Update conference w/provided fields & return w/updated info."""
         return self._updateConferenceObject(request)
 
-
+    # Get conference end point
     @endpoints.method(CONF_GET_REQUEST, ConferenceForm,
             path='conference/{websafeConferenceKey}',
             http_method='GET', name='getConference')
@@ -265,6 +269,7 @@ class ConferenceApi(remote.Service):
         return self._copyConferenceToForm(conf, getattr(prof, 'displayName'))
 
 
+    # Get conferences created end point
     @endpoints.method(message_types.VoidMessage, ConferenceForms,
             path='getConferencesCreated',
             http_method='POST', name='getConferencesCreated')
