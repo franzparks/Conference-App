@@ -152,7 +152,10 @@ conferenceApp.controllers.controller('CreateConferenceCtrl',
             'London',
             'Paris',
             'San Francisco',
-            'Tokyo'
+            'Tokyo',
+            'Lusaka',
+            'Santa Clara',
+            'Johannesburg'
         ];
 
         /**
@@ -164,7 +167,8 @@ conferenceApp.controllers.controller('CreateConferenceCtrl',
             'Programming Languages',
             'Web Technologies',
             'Movie Making',
-            'Health and Nutrition'
+            'Health and Nutrition',
+            'The future of sports'
         ];
 
         /**
